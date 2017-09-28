@@ -1,2 +1,5 @@
 # Executable
 out
+
+# Vim backups
+*.sw[a-z]
