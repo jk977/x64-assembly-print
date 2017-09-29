@@ -13,7 +13,7 @@ else
 fi
 
 if [ -z $2 ]; then
-    times=100
+    times=1000
 else
     times=$2
 fi
