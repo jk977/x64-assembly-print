@@ -51,21 +51,18 @@ strlen:
 
     push rbp
     mov rbp, rsp
-
-    push r8 ;save register value
+    push r8
 
     mov rax, 0              ;string length
     mov r8, qword [rbp+16]  ;pointer to first character
 
 loop:
-    cmp byte [r8], 0    ;compare current character to null
-    je end              ;exit if null character
-
-    add r8, 1   ;move character address to next byte
-    add rax, 1  ;increment character counter
+    cmp byte [r8+rax], 0    ;compare current character to null
+    je end                  ;exit if null character
+    add rax, 1              ;increment character counter
     jmp loop
 
 end:
-    pop r8  ;restore register value
+    pop r8  ;preserving register value
     leave
     ret
