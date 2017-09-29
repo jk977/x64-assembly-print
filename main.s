@@ -27,7 +27,6 @@ print:
     push qword [rbp+16]
     call strlen
 
-    ;save register values
     push rdi
     push rsi
 
@@ -37,7 +36,6 @@ print:
     mov rax, 1              ;sys_write call
     syscall                 ;print
 
-    ;restore register values
     pop rsi
     pop rdi
 
