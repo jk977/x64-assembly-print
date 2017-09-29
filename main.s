@@ -40,7 +40,7 @@ print:
     pop rdi
 
     leave   ;exit stack frame - same as mov rsp, rbp -> pop rbp
-    ret     ;remove parameter from stack
+    ret 8   ;frees qword parameter
 
 strlen:
     ;gets string length pointed to by pointer on stack
@@ -61,6 +61,6 @@ loop:
     jmp loop
 
 end:
-    pop r8  ;preserving register value
+    pop r8  ;preserves register value
     leave
-    ret
+    ret 8
