@@ -1,0 +1,41 @@
+#!/bin/bash
+# Times execution of file and outputs results.
+# Usage: ./telemetry $file $times $scale
+# Parameters:
+#   - file:  Path to executable file to test.
+#   - times: Number of times to run program (defaults to 100).
+#   - scale: Precision of the result (defaults to 5).
+
+if [ -z $1 ]; then
+    file=./out
+else
+    file=$1
+fi
+
+if [ -z $2 ]; then
+    times=100
+else
+    times=$2
+fi
+
+if [ -z $3 ]; then
+    scale=6
+else
+    scale=$3
+fi
+
+result=`{ time for i in $(seq $times); do $file 1>/dev/null; done; } 2>&1 |\
+            grep real |\
+            grep -Po "\d+m\d\.\d+"`
+minutes=`echo "$result" |\
+            grep -Po "^\d+"`
+seconds=`echo "$result" |\
+            grep -Po "m.+" |\
+            sed 's/m//' |\
+            xargs echo "$minutes*60+" |\
+            bc |\
+            xargs echo "scale=$scale; $times^-1*" |\
+            bc`
+
+echo "Total time taken: ${result}s"
+echo "Average time per execution: ${seconds}s"

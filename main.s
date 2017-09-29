@@ -21,20 +21,21 @@ print:
     ;prints string pointed to by pointer on stack
     ;param output (rbp+16): pointer to null-terminated 8-bit character array
 
-    push rbp        ;push base pointer to stack
-    mov rbp, rsp    ;stores current top of stack in base pointer
+    push rbp                ;push base pointer to stack
+    mov rbp, rsp            ;stores current top of stack in base pointer
+    mov r8, qword [rbp+16]  ;storing char array pointer in r8
 
-    push qword [rbp+16]
+    push r8     ;passing input string to strlen
     call strlen
 
     push rdi
     push rsi
 
-    mov rdx, rax            ;string length for system call
-    mov rsi, qword [rbp+16] ;pointer to first char in output
-    mov rdi, 1              ;file descriptor
-    mov rax, 1              ;sys_write call
-    syscall                 ;print
+    mov rdx, rax    ;string length for system call
+    mov rsi, r8     ;pointer to first char in output
+    mov rdi, 1      ;file descriptor
+    mov rax, 1      ;sys_write call
+    syscall         ;print
 
     pop rsi
     pop rdi
