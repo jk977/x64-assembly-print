@@ -4,10 +4,15 @@
 # Options:
 #   -c: Number of times to run program (defaults to 100).
 #   -f: Path to executable file to test.
-#   -s: Precision of the result (defaults to 5).
+#   -s: Precision of the result (defaults to length of count + 2).
 
 echoerr() {
     >&2 echo $@
+}
+
+exiterr() {
+    echoerr "Error: " $@
+    exit 1
 }
 
 testnumber() {
@@ -20,24 +25,21 @@ while getopts ":c:f:s:" opt; do
             if testnumber "$OPTARG"; then
                 count=$OPTARG
             else
-                echoerr "Error: Count must be a number."
-                exit 1
+                exiterr "Count must be a number."
             fi
             ;;
         f)
             if [ -x $OPTARG ]; then
                 file=$OPTARG
             else
-                echoerr "Error: File must be executable."
-                exit 1
+                exiterr "File must be executable."
             fi
             ;;
         s)
             if testnumber "$OPTARG"; then
                 scale=$OPTARG
             else
-                echoerr "Error: Scale must be a number."
-                exit 1
+                exiterr "Scale must be a number."
             fi
             ;;
     esac
@@ -49,6 +51,10 @@ fi
 
 if [ -z $file ]; then
     file=./out
+
+    if ! [ -x $file ]; then
+        exiterr "No executable found."
+    fi
 fi
 
 if [ -z $scale ]; then
