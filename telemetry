@@ -10,7 +10,7 @@ echoerr() {
     >&2 echo $@
 }
 
-while getopts ":f:c:s" opt; do
+while getopts ":f:c:s:" opt; do
     case $opt in
         f)
             if [ -x $OPTARG ]; then
