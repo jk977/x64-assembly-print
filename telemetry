@@ -3,7 +3,7 @@
 # Usage: ./telemetry -[f|c|s] [arg] ...
 # Options:
 #   -f: Path to executable file to test.
-#   -c: Number of count to run program (defaults to 100).
+#   -c: Number of times to run program (defaults to 100).
 #   -s: Precision of the result (defaults to 5).
 
 echoerr() {
