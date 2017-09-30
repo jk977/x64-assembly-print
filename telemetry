@@ -10,10 +10,14 @@ echoerr() {
     >&2 echo $@
 }
 
+testnumber() {
+    return $( [ "$1" -eq "$1" ] 2>/dev/null )
+}
+
 while getopts ":c:f:s:" opt; do
     case $opt in
         c)
-            if [ "$OPTARG" -eq "$OPTARG" ] 2>/dev/null; then
+            if testnumber "$OPTARG"; then
                 count=$OPTARG
             else
                 echoerr "Error: Count must be a number."
@@ -29,7 +33,7 @@ while getopts ":c:f:s:" opt; do
             fi
             ;;
         s)
-            if [ "$OPTARG" -eq "$OPTARG" ] 2>/dev/null; then
+            if testnumber "$OPTARG"; then
                 scale=$OPTARG
             else
                 echoerr "Error: Scale must be a number."
@@ -48,7 +52,7 @@ if [ -z $file ]; then
 fi
 
 if [ -z $scale ]; then
-    scale=6
+    scale=$(( `printf "$count" | wc -c` + 2 ))
 fi
 
 result=`{ time for i in $(seq $count); do $file 1>/dev/null; done; } 2>&1 |\
