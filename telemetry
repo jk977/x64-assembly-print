@@ -1,30 +1,38 @@
 #!/bin/bash
-# Times execution of file and outputs results.
-# Usage: ./telemetry $file $times $scale
-# Parameters:
-#   - file:  Path to executable file to test.
-#   - times: Number of times to run program (defaults to 100).
-#   - scale: Precision of the result (defaults to 5).
+# Times execution of file and outputs results (ignores invalid options).
+# Usage: ./telemetry -[f|c|s] [arg] ...
+# Options:
+#   -f: Path to executable file to test.
+#   -c: Number of count to run program (defaults to 100).
+#   -s: Precision of the result (defaults to 5).
 
-if [ -z $1 ]; then
+while getopts ":f:c:s" opt; do
+    case $opt in
+        f)
+            file=$OPTARG
+            ;;
+        c)
+            count=$OPTARG
+            ;;
+        s)
+            scale=$OPTARG
+            ;;
+    esac
+done
+
+if [ -z $file ] || ! [ -x $file ]; then
     file=./out
-else
-    file=$1
 fi
 
-if [ -z $2 ]; then
-    times=1000
-else
-    times=$2
+if [ -z $count ]; then
+    count=1000
 fi
 
-if [ -z $3 ]; then
+if [ -z $scale ]; then
     scale=6
-else
-    scale=$3
 fi
 
-result=`{ time for i in $(seq $times); do $file 1>/dev/null; done; } 2>&1 |\
+result=`{ time for i in $(seq $count); do $file 1>/dev/null; done; } 2>&1 |\
             grep real |\
             grep -Po "\d+m\d\.\d+"`
 minutes=`echo "$result" |\
@@ -34,7 +42,7 @@ seconds=`echo "$result" |\
             sed 's/m//' |\
             xargs echo "$minutes*60+" |\
             bc |\
-            xargs echo "scale=$scale; $times^-1*" |\
+            xargs echo "scale=$scale; $count^-1*" |\
             bc`
 
 echo "Total time taken: ${result}s"
