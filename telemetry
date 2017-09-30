@@ -6,12 +6,8 @@
 #   -f: Path to executable file to test.
 #   -s: Precision of the result (defaults to length of count + 2).
 
-echoerr() {
-    >&2 echo $@
-}
-
 exiterr() {
-    echoerr "Error: " $@
+    >&2 echo "Error: " $@
     exit 1
 }
 
