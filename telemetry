@@ -6,21 +6,40 @@
 #   -c: Number of count to run program (defaults to 100).
 #   -s: Precision of the result (defaults to 5).
 
+echoerr() {
+    >&2 echo $@
+}
+
 while getopts ":f:c:s" opt; do
     case $opt in
         f)
-            file=$OPTARG
+            if [ -x $OPTARG ]; then
+                file=$OPTARG
+            else
+                echoerr "Error: File must be executable."
+                exit 1
+            fi
             ;;
         c)
-            count=$OPTARG
+            if [ "$OPTARG" -eq "$OPTARG" ] 2>/dev/null; then
+                count=$OPTARG
+            else
+                echoerr "Error: Count must be a number."
+                exit 1
+            fi
             ;;
         s)
-            scale=$OPTARG
+            if [ "$OPTARG" -eq "$OPTARG" ] 2>/dev/null; then
+                scale=$OPTARG
+            else
+                echoerr "Error: Scale must be a number."
+                exit 1
+            fi
             ;;
     esac
 done
 
-if [ -z $file ] || ! [ -x $file ]; then
+if [ -z $file ]; then
     file=./out
 fi
 
