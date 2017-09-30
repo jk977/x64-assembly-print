@@ -23,9 +23,9 @@ print:
 
     push rbp                ;push base pointer to stack
     mov rbp, rsp            ;stores current top of stack in base pointer
-    mov r8, qword [rbp+16]  ;storing char array pointer in r8
+    mov r8, qword [rbp+16]  ;storing pointer
 
-    push r8     ;passing input string to strlen
+    push r8
     call strlen
 
     push rdi
