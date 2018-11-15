@@ -1,16 +1,20 @@
 ;implementing functions to find string length and print it
 section .data
-output1 db `Hello, world!\n`, 0
-output2 db `Goodbye, world!\n`, 0
+output1 db `Hello, world!\n`
+output2 db `Goodbye, world!\n`
 
 section .text
-global main
+global _start
 
-main:
+_start:
+    mov r8, 14
     push output1 ;push output string to stack
+    push r8
     call print   ;call function - pushes return address on stack
 
+    mov r8, 17
     push output2
+    push r8
     call print
 
     mov rax, 60 ;system exit call
@@ -19,49 +23,23 @@ main:
 
 print:
     ;prints string pointed to by pointer on stack
-    ;param output (rbp+16): pointer to null-terminated 8-bit character array
+    ;param length (rbp+16): length of string to print
+    ;param output (rbp+24): pointer to null-terminated 8-bit character array
 
     push rbp                ;push base pointer to stack
     mov rbp, rsp            ;stores current top of stack in base pointer
-    mov r8, qword [rbp+16]  ;storing pointer
-
-    push r8
-    call strlen
 
     push rdi
     push rsi
 
-    mov rdx, rax    ;string length for system call
-    mov rsi, r8     ;pointer to first char in output
-    mov rdi, 1      ;file descriptor
-    mov rax, 1      ;sys_write call
-    syscall         ;print
+    mov rdx, qword [rbp+16]     ;string length for system call
+    mov rsi, qword [rbp+24]     ;pointer to first char in output
+    mov rdi, 1                  ;file descriptor
+    mov rax, 1                  ;sys_write call
+    syscall                     ;print
 
     pop rsi
     pop rdi
 
     leave   ;exit stack frame - same as mov rsp, rbp -> pop rbp
-    ret 8   ;frees qword parameter
-
-strlen:
-    ;gets string length pointed to by pointer on stack
-    ;param string (rbp+16): pointer to null-terminated 8-bit character array
-    ;returns: string length, held in rax
-
-    push rbp
-    mov rbp, rsp
-    push r8
-
-    mov rax, 0              ;string length
-    mov r8, qword [rbp+16]  ;pointer to first character
-
-loop:
-    cmp byte [r8+rax], 0    ;compare current character to null
-    je end                  ;exit if null character
-    add rax, 1              ;increment character counter
-    jmp loop
-
-end:
-    pop r8  ;preserves register value
-    leave
-    ret 8
+    ret 16  ;frees qword parameter

@@ -1,5 +1,2 @@
-# Executable
-out
-
-# Vim backups
+bin/
 *.sw[a-z]

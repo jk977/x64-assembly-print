@@ -1,7 +1,8 @@
-SOURCE ?= main.s
-DESTINATION ?= out
+.PHONY: all clean
 
-$(DESTINATION): $(SOURCE)
-	nasm -g -f elf64 -o "$(DESTINATION).o" "$(SOURCE)"
-	gcc -g -o "$(DESTINATION)" "$(DESTINATION).o"
-	rm "$(DESTINATION).o"
+all:
+	nasm -g -f elf64 -o bin/main.o main.s
+	ld -o bin/main bin/main.o
+
+clean:
+	rm -rf bin/*
