@@ -1,5 +1,5 @@
 ;implementing functions to find string length and print it
-section .data
+section .rodata
 output1 db `Hello, world!\n`
 output2 db `Goodbye, world!\n`
 
