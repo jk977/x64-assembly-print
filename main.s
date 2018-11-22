@@ -1,20 +1,21 @@
 ;implementing functions to find string length and print it
 section .rodata
 output1 db `Hello, world!\n`
+o1_length equ $-output1
+
 output2 db `Goodbye, world!\n`
+o2_length equ $-output2
 
 section .text
 global _start
 
 _start:
-    mov r8, 14
     push output1 ;push output string to stack
-    push r8
+    push o1_length
     call print   ;call function - pushes return address on stack
 
-    mov r8, 17
     push output2
-    push r8
+    push o2_length
     call print
 
     mov rax, 60 ;system exit call
